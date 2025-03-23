@@ -9,6 +9,12 @@ public abstract class Container(
     string? serialNumber,
     double maxWeightCapacity)
 {
+    private static int id = 0;
+
+    public static int GetId()
+    {
+        return id++;
+    }
     public double CargoWeight { get; set; } = cargoWeight;
     public double Height { get; set; } = height;
     public double Weight { get; set; }
@@ -16,9 +22,23 @@ public abstract class Container(
     public string? SerialNumber { get; set; } = serialNumber;
     public double MaxWeightCapacity { get; set; } = maxWeightCapacity;
 
-    public void SetEmpty()
+    public virtual void SetEmpty()
     {
         CargoWeight = 0;
+    }
+
+    public virtual void FillCargo(double cargoWeight)
+    {
+        CargoWeight += cargoWeight;
+        try
+        {
+            CheckCapacity();
+        }
+        catch (OverfillException e)
+        {
+            Console.WriteLine(e);
+            CargoWeight-=cargoWeight;
+        }
     }
 
     public void CheckCapacity()
@@ -28,4 +48,7 @@ public abstract class Container(
             throw new OverfillException();
         }
     }
+
+    public abstract void PrintInfo();
+
 }
